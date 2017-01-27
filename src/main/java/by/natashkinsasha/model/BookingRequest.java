@@ -4,6 +4,8 @@ package by.natashkinsasha.model;
 import by.natashkinsasha.controller.conventer.BookingRequestConverter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
+import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.data.annotation.Id;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.AssertTrue;
@@ -15,9 +17,12 @@ import java.time.LocalDateTime;
 @Validated
 @JsonDeserialize(using = BookingRequestConverter.Deserializer.class)
 public class BookingRequest {
+    @Id
+    private String id;
     @NotNull
     private LocalDateTime bookingDateTime;
     @NotNull
+    @NotBlank
     private String userId;
     @NotNull
     private LocalDateTime startSubmissionTime;
@@ -28,8 +33,13 @@ public class BookingRequest {
     }
 
     @AssertTrue(message = "Booking time should be before start submission time")
-    private boolean isValid() {
+    private boolean isСorrectlyBookingTime() {
         return bookingDateTime.isBefore(startSubmissionTime);
+    }
+
+    @AssertTrue(message = "Start submission time should be before finish submission time")
+    private boolean isСorrectlySubmissionTime() {
+        return startSubmissionTime.isBefore(finishSubmissionTime);
     }
 
     public LocalDateTime getBookingDateTime() {
