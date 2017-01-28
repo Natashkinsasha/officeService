@@ -21,7 +21,7 @@ public class DayScheduleConverter {
         @Override
         public void serialize(DaySchedule daySchedule, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
             jsonGenerator.writeStartObject();
-            jsonGenerator.writeNumberField("date", TimeUtil.toUnixTime(daySchedule.getDate()));
+            jsonGenerator.writeNumberField("date", daySchedule.getDate());
             jsonGenerator.writeArrayFieldStart("reservations");
             daySchedule.getReservations().stream().forEachOrdered((reservations) ->{
                 try {

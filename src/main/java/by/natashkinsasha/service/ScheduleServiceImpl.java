@@ -27,20 +27,30 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 
     @Override
-    public List<DaySchedule> create(LocalTime startWorkTime, LocalTime finishWorkTime, LocalDate startData, LocalDate finishData) {
-        List<BookingRequest> bookingRequests = bookingRequestRepository.findAll();
-        bookingRequests = removeOutWorkAndSort(bookingRequests, startWorkTime, finishWorkTime);
+    public List<DaySchedule> create(Long startData, Long finishData, Long startWorkTime, Long finishWorkTime) {
+        List<BookingRequest> bookingRequests1 = bookingRequestRepository.findAll();
+        List<BookingRequest> bookingRequests = bookingRequestRepository.findByStartSubmissionDataBetweenAndStartSubmissionTimeGreaterThanAndFinishSubmissionTimeLessThan(startData, finishData, startWorkTime-1, finishWorkTime+1);
+        bookingRequests = removeOverlapping(bookingRequests);
         List<DaySchedule> daySchedules = shapeSchedules(bookingRequests);
         return daySchedules;
     }
 
-
-
-    private List<BookingRequest> removeOutWorkAndSort(List<BookingRequest> bookingRequests, LocalTime startWorktime, LocalTime finishWorkTime) {
-        return bookingRequests.parallelStream().filter(bookingRequest ->
-                ((!bookingRequest.getStartSubmissionTime().toLocalTime().isBefore(startWorktime)) && (!bookingRequest.getFinishSubmissionTime().toLocalTime().isAfter(finishWorkTime))))
-                .sorted(new ComparatorBookingRequestByBookingDate()).collect(Collectors.toList());
+    private List<BookingRequest> removeOverlapping(List<BookingRequest> bookingRequestList) {
+        bookingRequestList.sort(new ComparatorBookingRequestByBookingDate());
+        int size = bookingRequestList.size();
+        for (int i = 0; i < size - 1; i++) {
+            for (int j = i + 1; j < size; j++) {
+                if (bookingRequestList.get(j).isOverlapping(bookingRequestList.get(i))) {
+                    bookingRequestList.remove(j);
+                    j--;
+                    size--;
+                }
+            }
+        }
+        return bookingRequestList;
     }
+
+
 
 
 
@@ -48,15 +58,15 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 
     private List<DaySchedule> shapeSchedules(List<BookingRequest> bookingRequestList) {
-        Map<LocalDate, List<BookingRequest>> groupByLocalDateStartSubmissionTime = bookingRequestList.parallelStream().collect(Collectors.groupingBy((bookingRequest) -> bookingRequest.getStartSubmissionTime().toLocalDate()));
-        List<DaySchedule> daySchedules = groupByLocalDateStartSubmissionTime.entrySet().parallelStream().map(entry -> {
+        Map<Long, List<BookingRequest>> groupBySubmissionData = bookingRequestList.parallelStream().collect(Collectors.groupingBy((bookingRequest) -> bookingRequest.getStartSubmissionData()));
+        List<DaySchedule> daySchedules = groupBySubmissionData.entrySet().parallelStream().map(entry -> {
             DaySchedule daySchedule = new DaySchedule();
             daySchedule.setDate(entry.getKey());
             List<Reservations> reservationsList = entry.getValue().parallelStream().map(bookingRequest -> {
                 Reservations reservations = new Reservations();
                 reservations.setUserId(bookingRequest.getUserId());
-                reservations.setStartDuration(bookingRequest.getStartSubmissionTime().toLocalTime());
-                reservations.setFinishDuration(bookingRequest.getFinishSubmissionTime().toLocalTime());
+                reservations.setStartDuration(bookingRequest.getStartSubmissionTime());
+                reservations.setFinishDuration(bookingRequest.getFinishSubmissionTime());
                 return reservations;
             }).sorted(new ComparatorReservationByTime()).collect(Collectors.toList());
             daySchedule.setReservations(reservationsList);

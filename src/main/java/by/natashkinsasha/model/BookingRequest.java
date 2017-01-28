@@ -10,7 +10,6 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 
 
 @Data
@@ -20,33 +19,41 @@ public class BookingRequest {
     @Id
     private String id;
     @NotNull
-    private LocalDateTime bookingDateTime;
+    private Long bookingDateTime;
     @NotNull
     @NotBlank
     private String userId;
     @NotNull
-    private LocalDateTime startSubmissionTime;
+    private Long startSubmissionData;
     @NotNull
-    private LocalDateTime finishSubmissionTime;
+    private Long startSubmissionTime;
+    @NotNull
+    private Long finishSubmissionTime;
 
     public BookingRequest() {
     }
 
     @AssertTrue(message = "Booking time should be before start submission time")
     private boolean isСorrectlyBookingTime() {
-        return bookingDateTime.isBefore(startSubmissionTime);
+        return bookingDateTime < (startSubmissionData+startSubmissionTime);
     }
 
     @AssertTrue(message = "Start submission time should be before finish submission time")
     private boolean isСorrectlySubmissionTime() {
-        return startSubmissionTime.isBefore(finishSubmissionTime);
+        return startSubmissionTime < (finishSubmissionTime);
     }
 
-    public LocalDateTime getBookingDateTime() {
+    public boolean isOverlapping(BookingRequest bookingRequest) {
+
+        return this.getStartSubmissionTime()<bookingRequest.getFinishSubmissionTime() && bookingRequest.getStartSubmissionTime()<this.getFinishSubmissionTime();
+    }
+
+
+    public Long getBookingDateTime() {
         return bookingDateTime;
     }
 
-    public void setBookingDateTime(LocalDateTime bookingDateTime) {
+    public void setBookingDateTime(Long bookingDateTime) {
         this.bookingDateTime = bookingDateTime;
     }
 
@@ -58,37 +65,36 @@ public class BookingRequest {
         this.userId = userId;
     }
 
-    public LocalDateTime getStartSubmissionTime() {
-        return startSubmissionTime;
+    public Long getStartSubmissionData() {
+        return startSubmissionData;
     }
 
-    public void setStartSubmissionTime(LocalDateTime startSubmissionTime) {
-        this.startSubmissionTime = startSubmissionTime;
+    public void setStartSubmissionData(Long startSubmissionData) {
+        this.startSubmissionData = startSubmissionData;
     }
 
-    public LocalDateTime getFinishSubmissionTime() {
+    public Long getFinishSubmissionTime() {
         return finishSubmissionTime;
     }
 
-    public void setFinishSubmissionTime(LocalDateTime finishSubmissionTime) {
+    public void setFinishSubmissionTime(Long finishSubmissionTime) {
         this.finishSubmissionTime = finishSubmissionTime;
     }
 
-
-    public boolean isOverlapping(BookingRequest bookingRequest) {
-        return this.getStartSubmissionTime().isBefore(bookingRequest.getFinishSubmissionTime()) && bookingRequest.getStartSubmissionTime().isBefore(this.getFinishSubmissionTime());
+    public String getId() {
+        return id;
     }
 
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer("BookingRequest{");
-        sb.append("bookingDateTime=").append(bookingDateTime);
-        sb.append(", userId='").append(userId).append('\'');
-        sb.append(", startSubmissionTime=").append(startSubmissionTime);
-        sb.append(", finishSubmissionTime=").append(finishSubmissionTime);
-        sb.append('}');
-        return sb.toString();
+    public void setId(String id) {
+        this.id = id;
     }
 
+    public Long getStartSubmissionTime() {
+        return startSubmissionTime;
+    }
+
+    public void setStartSubmissionTime(Long startSubmissionTime) {
+        this.startSubmissionTime = startSubmissionTime;
+    }
 }
 

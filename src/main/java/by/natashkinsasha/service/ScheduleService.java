@@ -8,5 +8,5 @@ import java.util.List;
 
 
 public interface ScheduleService {
-    List<DaySchedule> create(LocalTime startWorktime, LocalTime finishWorkTime, LocalDate startData, LocalDate finishData);
+    List<DaySchedule> create(Long startData, Long finishData, Long startWorkTime, Long finishWorkTime);
 }

@@ -13,18 +13,18 @@ import java.util.List;
 @Data
 @JsonSerialize(using = DayScheduleConverter.Serializer.class)
 public class DaySchedule   {
-  private LocalDate date;
+  private Long date;
   private List<Reservations> reservations = new ArrayList<Reservations>();
 
   public DaySchedule() {
   }
 
 
-  public LocalDate getDate() {
+  public Long getDate() {
     return date;
   }
 
-  public void setDate(LocalDate date) {
+  public void setDate(Long date) {
     this.date = date;
   }
 

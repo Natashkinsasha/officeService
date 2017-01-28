@@ -21,8 +21,8 @@ public class ReservationsConverter {
         public void serialize(Reservations reservations, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
             jsonGenerator.writeStartObject();
             jsonGenerator.writeStringField("userId", reservations.getUserId());
-            jsonGenerator.writeNumberField("startDuration", TimeUtil.toSecond(reservations.getStartDuration()));
-            jsonGenerator.writeNumberField("finishDuration", TimeUtil.toSecond(reservations.getFinishDuration()));
+            jsonGenerator.writeNumberField("startDuration", reservations.getStartDuration());
+            jsonGenerator.writeNumberField("finishDuration", reservations.getFinishDuration());
             jsonGenerator.writeEndObject();
         }
     }

@@ -20,7 +20,7 @@ public class DayScheduleController {
     private ScheduleService scheduleService;
 
     @RequestMapping(method = RequestMethod.GET)
-    List<DaySchedule> getDaySchedules(@RequestParam("startWorkTime") @NotNull(message = "Start work time is null.") Long startWorkTime, @RequestParam("finishWorkTime") @NotNull(message = "Finish work time is null.") Long finishWorkTime, @RequestParam("startData") Long startData, @RequestParam("startData") Long finishData) {
-        return scheduleService.create(TimeUtil.toLocalTime(startWorkTime), TimeUtil.toLocalTime(finishWorkTime), TimeUtil.toLocalDate(startData), TimeUtil.toLocalDate(finishData));
+    List<DaySchedule> getDaySchedules(@RequestParam("startWorkTime") @NotNull(message = "Start work time is null.") Long startWorkTime, @RequestParam("finishWorkTime") @NotNull(message = "Finish work time is null.") Long finishWorkTime, @RequestParam("startData") Long startData, @RequestParam("finishData") Long finishData) {
+        return scheduleService.create(startData, finishData, startWorkTime, finishWorkTime);
     }
 }

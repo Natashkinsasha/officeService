@@ -12,27 +12,27 @@ import java.time.LocalTime;
 @JsonSerialize(using = ReservationsConverter.Serializer.class)
 public class Reservations   {
 
-  private LocalTime startDuration;
-  private LocalTime finishDuration;
+  private Long startDuration;
+  private Long finishDuration;
   private String userId;
 
   public Reservations() {
   }
 
 
-  public LocalTime getStartDuration() {
+  public Long getStartDuration() {
     return startDuration;
   }
 
-  public void setStartDuration(LocalTime startDuration) {
+  public void setStartDuration(Long startDuration) {
     this.startDuration = startDuration;
   }
 
-  public LocalTime getFinishDuration() {
+  public Long getFinishDuration() {
     return finishDuration;
   }
 
-  public void setFinishDuration(LocalTime finishDuration) {
+  public void setFinishDuration(Long finishDuration) {
     this.finishDuration = finishDuration;
   }
 

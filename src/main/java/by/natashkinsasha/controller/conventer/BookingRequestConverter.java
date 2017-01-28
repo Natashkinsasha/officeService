@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.jackson.JsonComponent;
 
 import java.io.IOException;
-import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 @JsonComponent
@@ -29,7 +28,7 @@ public class BookingRequestConverter {
             JsonNode node = oc.readTree(jsonParser);
             BookingRequest bookingRequest = new BookingRequest();
             Optional.ofNullable(node.get("bookingDateTime")).ifPresent((bookingDateTime)->{
-                bookingRequest.setBookingDateTime(TimeUtil.toLocalDateTime(bookingDateTime.asLong()));
+                bookingRequest.setBookingDateTime(bookingDateTime.asLong());
             });
 
             Optional.ofNullable(node.get("userId")).ifPresent((userId)->{
@@ -37,12 +36,13 @@ public class BookingRequestConverter {
             });
 
             Optional.ofNullable(node.get("submissionTime")).ifPresent((submissionTime)->{
-                bookingRequest.setStartSubmissionTime(TimeUtil.toLocalDateTime(submissionTime.asLong()));
+                bookingRequest.setStartSubmissionData(TimeUtil.toUnixTime(TimeUtil.toLocalDate(submissionTime.asLong())));
+                bookingRequest.setStartSubmissionTime(TimeUtil.toSecond(TimeUtil.toLocalDateTime(submissionTime.asLong()).toLocalTime()));
             });
 
             Optional.ofNullable(node.get("duration")).ifPresent((duration)->{
                 Optional.ofNullable(bookingRequest.getStartSubmissionTime()).ifPresent((submissionTime)->{
-                    bookingRequest.setFinishSubmissionTime(submissionTime.plus(duration.asLong(), ChronoUnit.SECONDS));
+                    bookingRequest.setFinishSubmissionTime(submissionTime+duration.asLong());
                 });
             });
 
