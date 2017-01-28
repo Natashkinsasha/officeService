@@ -13,4 +13,5 @@ public interface BookingRequestRepository extends MongoRepository<BookingRequest
 
     List<BookingRequest> findByStartSubmissionDataBetweenAndStartSubmissionTimeGreaterThanAndFinishSubmissionTimeLessThan(Long startData, Long finishData, Long startWorkTime, Long finishWorkTime);
 
+    List<BookingRequest> findByStartSubmissionData(Long startSubmissionData);
 }

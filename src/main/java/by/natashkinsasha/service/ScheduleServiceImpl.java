@@ -30,30 +30,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     public List<DaySchedule> create(Long startData, Long finishData, Long startWorkTime, Long finishWorkTime) {
         List<BookingRequest> bookingRequests1 = bookingRequestRepository.findAll();
         List<BookingRequest> bookingRequests = bookingRequestRepository.findByStartSubmissionDataBetweenAndStartSubmissionTimeGreaterThanAndFinishSubmissionTimeLessThan(startData, finishData, startWorkTime-1, finishWorkTime+1);
-        bookingRequests = removeOverlapping(bookingRequests);
         List<DaySchedule> daySchedules = shapeSchedules(bookingRequests);
         return daySchedules;
     }
-
-    private List<BookingRequest> removeOverlapping(List<BookingRequest> bookingRequestList) {
-        bookingRequestList.sort(new ComparatorBookingRequestByBookingDate());
-        int size = bookingRequestList.size();
-        for (int i = 0; i < size - 1; i++) {
-            for (int j = i + 1; j < size; j++) {
-                if (bookingRequestList.get(j).isOverlapping(bookingRequestList.get(i))) {
-                    bookingRequestList.remove(j);
-                    j--;
-                    size--;
-                }
-            }
-        }
-        return bookingRequestList;
-    }
-
-
-
-
-
 
 
 

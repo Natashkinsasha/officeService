@@ -36,8 +36,8 @@ public class BookingRequestController {
 
     @ResponseStatus( HttpStatus.CREATED )
     @RequestMapping(method = RequestMethod.POST, path = "createWithArray")
-    public void postBookingRequestCreateWithArray(@RequestBody @NotNull @NotEmpty @Size(min = 1) @Valid List<BookingRequest> bookingRequests) {
-        bookingRequestService.save(bookingRequests);
+    public List<BookingRequest> postBookingRequestCreateWithArray(@RequestBody @NotNull @NotEmpty @Size(min = 1) @Valid List<BookingRequest> bookingRequests) {
+        return bookingRequestService.save(bookingRequests);
     }
 
     @ResponseStatus( HttpStatus.CREATED )

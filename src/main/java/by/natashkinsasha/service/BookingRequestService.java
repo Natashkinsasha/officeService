@@ -8,5 +8,5 @@ import java.util.List;
 public interface BookingRequestService {
     void delete();
     void save(BookingRequest bookingRequest);
-    void save(List<BookingRequest> bookingRequests);
+    List<BookingRequest> save(List<BookingRequest> bookingRequests);
 }
