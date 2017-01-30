@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 
 @Data
@@ -22,6 +23,7 @@ public class BookingRequest {
     private Long bookingDateTime;
     @NotNull
     @NotBlank
+    @Size(max=10)
     private String userId;
     @NotNull
     private Long startSubmissionData;
@@ -44,8 +46,7 @@ public class BookingRequest {
     }
 
     public boolean isOverlapping(BookingRequest bookingRequest) {
-
-        return this.getStartSubmissionTime()<bookingRequest.getFinishSubmissionTime() && bookingRequest.getStartSubmissionTime()<this.getFinishSubmissionTime();
+        return this.startSubmissionData.equals(bookingRequest.startSubmissionData) && this.getStartSubmissionTime()<bookingRequest.getFinishSubmissionTime() && bookingRequest.getStartSubmissionTime()<this.getFinishSubmissionTime();
     }
 
 

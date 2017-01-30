@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -28,6 +29,7 @@ public class BookingRequestController {
     @Autowired
     private BookingRequestService bookingRequestService;
 
+
     @Bean
     public Validator getValidator() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
@@ -37,6 +39,14 @@ public class BookingRequestController {
     @ResponseStatus( HttpStatus.CREATED )
     @RequestMapping(method = RequestMethod.POST, path = "createWithArray")
     public List<BookingRequest> postBookingRequestCreateWithArray(@RequestBody @NotNull @NotEmpty @Size(min = 1) @Valid List<BookingRequest> bookingRequests) {
+        Set<ConstraintViolation<BookingRequest>> usuallValidate = new HashSet<>();
+        for (BookingRequest bookingRequest: bookingRequests){
+            Set<ConstraintViolation<BookingRequest>> validate = getValidator().validate(bookingRequest);
+            usuallValidate.addAll(validate);
+        }
+        if (usuallValidate.size()!=0){
+            throw new ConstraintViolationException("", usuallValidate);
+        }
         return bookingRequestService.save(bookingRequests);
     }
 
