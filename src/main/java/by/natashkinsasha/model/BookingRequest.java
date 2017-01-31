@@ -32,6 +32,8 @@ public class BookingRequest {
     @NotNull
     private Long finishSubmissionTime;
 
+
+
     public BookingRequest() {
     }
 

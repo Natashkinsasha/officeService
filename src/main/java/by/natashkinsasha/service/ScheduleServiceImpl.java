@@ -4,7 +4,6 @@ package by.natashkinsasha.service;
 import by.natashkinsasha.model.BookingRequest;
 import by.natashkinsasha.model.DaySchedule;
 import by.natashkinsasha.model.Reservations;
-import by.natashkinsasha.model.comparator.ComparatorBookingRequestByBookingDate;
 import by.natashkinsasha.model.comparator.ComparatorDayScheduleByData;
 import by.natashkinsasha.model.comparator.ComparatorReservationByTime;
 import by.natashkinsasha.repository.BookingRequestRepository;
@@ -13,8 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,7 +25,6 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public List<DaySchedule> create(Long startData, Long finishData, Long startWorkTime, Long finishWorkTime) {
-        List<BookingRequest> bookingRequests1 = bookingRequestRepository.findAll();
         List<BookingRequest> bookingRequests = bookingRequestRepository.findByStartSubmissionDataBetweenAndStartSubmissionTimeGreaterThanAndFinishSubmissionTimeLessThan(startData, finishData, startWorkTime-1, finishWorkTime+1);
         List<DaySchedule> daySchedules = shapeSchedules(bookingRequests);
         return daySchedules;
