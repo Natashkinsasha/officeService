@@ -27,6 +27,9 @@ public class BookingRequestConverter {
             ObjectCodec oc = jsonParser.getCodec();
             JsonNode node = oc.readTree(jsonParser);
             BookingRequest bookingRequest = new BookingRequest();
+            Optional.ofNullable(node.get("id")).ifPresent((id)->{
+                bookingRequest.setId(id.asText());
+            });
             Optional.ofNullable(node.get("bookingDateTime")).ifPresent((bookingDateTime)->{
                 bookingRequest.setBookingDateTime(bookingDateTime.asLong());
             });

@@ -23,8 +23,8 @@ public class BookingRequestServiceImpl implements BookingRequestService {
 
 
     @Override
-    public Page<BookingRequest> get(Integer pageNumber, Integer pageSize, String sortBy, Sort.Direction sortDirection, Long startData, Long finishData, Long startWorkTime, Long finishWorkTime) {
-        PageRequest pageRequest = new PageRequest(pageNumber - 1, pageSize, sortDirection, sortBy);
+    public Page<BookingRequest> get(Integer pageNumber, Integer pageSize, String[] sortBy, Sort.Direction sortDirection, Long startData, Long finishData, Long startWorkTime, Long finishWorkTime) {
+        PageRequest pageRequest = new PageRequest(pageNumber, pageSize, sortDirection, sortBy);
         return bookingRequestRepository.findByStartSubmissionDataBetweenAndStartSubmissionTimeGreaterThanAndFinishSubmissionTimeLessThan( startData, finishData, startWorkTime - 1, finishWorkTime + 1, pageRequest);
     }
 

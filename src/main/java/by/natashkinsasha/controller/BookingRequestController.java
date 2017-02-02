@@ -40,8 +40,8 @@ public class BookingRequestController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    Page<BookingRequest> getBookingRequests(@NotNull @RequestParam("pageNumber") Integer pageNumber, @NotNull @RequestParam("pageSize")  Integer pageSize, @NotNull @RequestParam("sortBy")  String sortBy, @NotNull @RequestParam("sortDirection")  String sortDirection, @RequestParam("startWorkTime") @NotNull(message = "Start work time is null.") Long startWorkTime, @RequestParam("finishWorkTime") @NotNull(message = "Finish work time is null.") Long finishWorkTime, @RequestParam("startData") Long startData, @RequestParam("finishData") Long finishData) {
-        Page<BookingRequest> bookingRequestList = bookingRequestService.get(pageNumber, pageSize, sortBy, Sort.Direction.DESC, startData, finishData, startWorkTime, finishWorkTime);
+    Page<BookingRequest> getBookingRequests(@NotNull @RequestParam("pageNumber") Integer pageNumber, @NotNull @RequestParam("pageSize")  Integer pageSize, @NotNull @RequestParam("sortBy[]")  String[] sortBy, @NotNull @RequestParam("sortDirection")  String sortDirection, @RequestParam("startWorkTime") @NotNull(message = "Start work time is null.") Long startWorkTime, @RequestParam("finishWorkTime") @NotNull(message = "Finish work time is null.") Long finishWorkTime, @RequestParam("startData") Long startData, @RequestParam("finishData") Long finishData) {
+        Page<BookingRequest> bookingRequestList = bookingRequestService.get(pageNumber, pageSize, sortBy, Sort.Direction.fromString(sortDirection), startData, finishData, startWorkTime, finishWorkTime);
         return bookingRequestList;
     }
 
